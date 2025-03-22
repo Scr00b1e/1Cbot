@@ -8,7 +8,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await message.answer('Здравствуйте, я бот по 1С!')
+    await message.answer("🤖 Бот запущен и готов к работе!")
 
 @router.message(Command('catalog'))
 async def get_catalog(message: Message):
