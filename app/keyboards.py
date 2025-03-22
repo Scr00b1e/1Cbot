@@ -4,8 +4,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 main = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text='Catalog', callback_data='catalog')],
-    [InlineKeyboardButton(text='Trash', callback_data='trash'), InlineKeyboardButton(text='Contacts', callback_data='contacts')]
+    [InlineKeyboardButton(text='Получить отчеты', callback_data='reports'), InlineKeyboardButton(text='Тест', callback_data='test')]
 ])
 
 settings = InlineKeyboardMarkup(inline_keyboard=[[

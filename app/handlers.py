@@ -8,18 +8,16 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await message.answer(f'Hi, \nyour name is {message.from_user.first_name}',
-                         reply_markup=kb.main)
+    await message.answer('Здравствуйте, я бот по 1С!')
 
+@router.message(Command('catalog'))
+async def get_catalog(message: Message):
+    await message.answer('Выберите каталог', reply_markup=kb.main)
 
-# @router.callback_query(F.data == 'catalog')
-# async def catalog(callback: CallbackQuery):
-#     await callback.message.edit_text('You choose catalog', reply_markup=await kb.inline_cars())
+@router.callback_query(F.data == 'reports')
+async def reports(callback: CallbackQuery):
+    await callback.message.edit_text('Вы выбрали отчеты')
 
-# @router.callback_query(F.data == 'trash')
-# async def trash(callback: CallbackQuery):
-#     await callback.message.edit_text('You choose trash')
-
-# @router.callback_query(F.data == 'contacts')
-# async def contacts(callback: CallbackQuery):
-#     await callback.message.edit_text('You choose contacts')
+@router.callback_query(F.data == 'test')
+async def test(callback: CallbackQuery):
+    await callback.message.edit_text('Вы выбрали тест')
