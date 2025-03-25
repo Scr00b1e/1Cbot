@@ -27,14 +27,18 @@ def get_report1c():
 
                 df = pd.DataFrame(data)
 
-                if "Клиент" not in df.columns or "Сумма" not in df.columns:
-                    return f"❌ Отсутствуют поля 'Клиент' и 'Сумма' в данных:\n\n```{df.head().to_string()}```"
-
-                df["Сумма"] = pd.to_numeric(df["Сумма"], errors="coerce").fillna(0)
-                df_formatted = df[["Клиент", "Сумма"]]
+                #required_columns = ["Дата", "Контрагент", "Номенклатура", "Количество", "Цена", "Сумма"]
+                required_columns = ["Контрагент", "Номенклатура", "Количество", "Цена", "Сумма"]
+                for col in required_columns:
+                    if col not in df.columns:
+                        df[col] = ""
+                
+                df = df[required_columns]
 
                 table = "📋 *Отчёт из 1С:*\n"
-                table += "```\n" + df_formatted.to_string(index=False, justify='left', col_space=15, float_format="%.2f") + "\n```"
+                table += "```\n"
+                table += df.to_string(index=False)
+                table += "\n```"
 
                 return table
 
