@@ -16,7 +16,7 @@ async def cmd_start(message: Message):
 async def get_catalog(message: Message):
     await message.answer('Выберите каталог', reply_markup=kb.main)
 
-@router.message(F.data == 'get_report')
+@router.callback_query(F.data == 'get_report')
 async def handle_callback(callback: CallbackQuery):
     report_text = get_report1c()
     await callback.message.answer(report_text, 
@@ -24,7 +24,7 @@ async def handle_callback(callback: CallbackQuery):
                                   reply_markup=kb.report_keyboard)
     await callback.answer()
 
-@router.message(F.data == 'close')
+@router.callback_query(F.data == 'close')
 async def handle_close(callback: CallbackQuery):
     await callback.message.delete()
     await callback.message.answer()

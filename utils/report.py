@@ -1,5 +1,6 @@
 import base64
 import requests
+import pandas as pd
 
 def get_report1c():
     url = "http://localhost/telegram/hs/tg/report"
@@ -19,19 +20,22 @@ def get_report1c():
         if response.status_code == 200:
             try:
                 data = response.json()
-                if not isinstance(data, list):
+                if isinstance(data, dict):
+                    data = [data]
+                elif not isinstance(data, list):
                     return f"⚠️ Ожидался список, но получено: `{type(data).__name__}`\n\n```{data}```"
 
+                df = pd.DataFrame(data)
+
+                if "Клиент" not in df.columns or "Сумма" not in df.columns:
+                    return f"❌ Отсутствуют поля 'Клиент' и 'Сумма' в данных:\n\n```{df.head().to_string()}```"
+
+                df["Сумма"] = pd.to_numeric(df["Сумма"], errors="coerce").fillna(0)
+                df_formatted = df[["Клиент", "Сумма"]]
+
                 table = "📋 *Отчёт из 1С:*\n"
-                table += "```\n{:25} {:10}\n".format("Клиент", "Сумма")
-                table += "-" * 38 + "\n"
+                table += "```\n" + df_formatted.to_string(index=False, justify='left', col_space=15, float_format="%.2f") + "\n```"
 
-                for row in data:
-                    table += "{:25} {:10.2f}\n".format(
-                        row.get("Клиент", ""), row.get("Сумма", 0)
-                    )
-
-                table += "```"
                 return table
 
             except Exception as e:
