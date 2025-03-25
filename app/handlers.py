@@ -18,7 +18,7 @@ async def get_catalog(message: Message):
 
 @router.message(F.data == 'get_report')
 async def handle_callback(callback: CallbackQuery):
-    report_text = get_report1c
+    report_text = get_report1c()
     await callback.message.answer(report_text, 
                                   parse_mode=ParseMode.MARKDOWN, 
                                   reply_markup=kb.report_keyboard)
@@ -27,7 +27,7 @@ async def handle_callback(callback: CallbackQuery):
 @router.message(F.data == 'close')
 async def handle_close(callback: CallbackQuery):
     await callback.message.delete()
-    await callback.message.answer
+    await callback.message.answer()
 
 @router.callback_query(F.data == 'test')
 async def test(callback: CallbackQuery):
