@@ -1,12 +1,18 @@
 from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.enums import ParseMode
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.context import FSMContext
 from aiogram import F, Router
 
 import app.keyboards as kb
+from app.generators import ai_generate
 from utils.report import get_report1c, get_cash1c, get_stock1c
 
 router = Router()
+
+class Generate(StatesGroup):
+    wait = State()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
@@ -16,10 +22,22 @@ async def cmd_start(message: Message):
 async def get_catalog(message: Message):
     await message.answer('Выберите каталог', reply_markup=kb.main)
 
-#test column
-@router.callback_query(F.data == 'test')
-async def test(callback: CallbackQuery):
-    await callback.message.edit_text('Вы выбрали тест')
+#chat bot
+@router.message(Command('ask'))
+async def ask_bot(message: Message):
+    await message.answer('Вы можете спросить вопрос')
+
+
+@router.message(Generate.wait)
+async def generate_error(message: Message):
+    await message.answer('Подождите, пока генерируется')
+
+@router.message()
+async def generate(message: Message, state: FSMContext):
+    await state.set_state(Generate.wait)
+    response = await ai_generate(message.text)
+    await message.answer(response)
+    await state.clear()
 
 #reports
 @router.callback_query(F.data == 'get_report')

@@ -19,5 +19,5 @@ report_keyboard = InlineKeyboardMarkup(inline_keyboard=[
 
 settings = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text='/catalog'), 
-     KeyboardButton(text='/test')]
+     KeyboardButton(text='/ask')]
 ])
