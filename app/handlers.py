@@ -72,6 +72,12 @@ async def test_order2(callback: CallbackQuery):
     await callback.answer()
     await callback.message.delete()
 
+#back
+@router.callback_query(F.data == 'back')
+async def handle_close(callback: CallbackQuery):
+    await callback.message.answer("Выберите каталог",reply_markup=kb.main)
+    await callback.message.delete()
+
 #close
 @router.callback_query(F.data == 'close')
 async def handle_close(callback: CallbackQuery):

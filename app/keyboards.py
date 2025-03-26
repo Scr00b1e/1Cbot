@@ -10,10 +10,12 @@ reports = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Отчет по деньгам", callback_data="supply_order")],
     [InlineKeyboardButton(text="Отчет по кассе", callback_data="cash_order")],
     [InlineKeyboardButton(text="Отчет по остаткам товаров", callback_data="stock_order")],
+    [InlineKeyboardButton(text="↩ Назад", callback_data="back")],
     [InlineKeyboardButton(text="❌ Закрыть", callback_data="close")]
 ])
 
 report_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="↩ Назад", callback_data="back")],
         [InlineKeyboardButton(text="❌ Закрыть", callback_data="close")]
     ])
 

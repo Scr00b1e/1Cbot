@@ -27,13 +27,12 @@ def get_report1c():
 
                 df = pd.DataFrame(data)
 
-                #required_columns = ["Дата", "Контрагент", "Номенклатура", "Количество", "Цена", "Сумма"]
-                required_columns = ["Организация", "БанковскийСчетКасса", "СуммаОстаток", "СуммаВалОстаток"]
+                required_columns = ["Орг", "БанковскийСчет", "Сумма", "СуммаВал"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
                 
-                df = df[required_columns]
+                df = df[required_columns].set_index('Орг').stack()
 
                 table = "📋 *Отчёт из 1С:*\n"
                 table += "```\n"
@@ -52,7 +51,7 @@ def get_report1c():
 
 
 def get_cash1c():
-    url = "http://localhost/telegram/hs/tg/report"
+    url = "http://localhost/telegram/hs/tg/cash"
     username = "Админ"
     password = ""
 
@@ -76,7 +75,7 @@ def get_cash1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Организация", "БанковскийСчетКасса", "СуммаОстаток", "СуммаВалОстаток"]
+                required_columns = ["Орг", "Касса", "Сумма", "СуммаВал"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
@@ -102,7 +101,7 @@ def get_cash1c():
 
 
 def get_stock1c():
-    url = "http://localhost/telegram/hs/tg/report"
+    url = "http://localhost/telegram/hs/tg/stock"
     username = "Админ"
     password = ""
 
@@ -126,7 +125,7 @@ def get_stock1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Организация", "Номенклатура", "Количество"]
+                required_columns = []
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
