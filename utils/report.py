@@ -76,7 +76,6 @@ def get_cash1c():
 
                 df = pd.DataFrame(data)
 
-                #required_columns = ["Дата", "Контрагент", "Номенклатура", "Количество", "Цена", "Сумма"]
                 required_columns = ["Организация", "БанковскийСчетКасса", "СуммаОстаток", "СуммаВалОстаток"]
                 for col in required_columns:
                     if col not in df.columns:
@@ -127,8 +126,7 @@ def get_stock1c():
 
                 df = pd.DataFrame(data)
 
-                #required_columns = ["Дата", "Контрагент", "Номенклатура", "Количество", "Цена", "Сумма"]
-                required_columns = ["Организация", "Номенклатура", "Количество", "КоличествоИнт"]
+                required_columns = ["Организация", "Номенклатура", "Количество"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""

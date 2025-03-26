@@ -10,7 +10,7 @@ router = Router()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
-    await message.answer("🤖 Бот запущен и готов к работе!")
+    await message.answer("🤖 Бот запущен и готов к работе!", reply_markup=kb.settings)
 
 @router.message(Command('catalog'))
 async def get_catalog(message: Message):
