@@ -3,7 +3,8 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 
 main = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='📊 Получить отчёт', callback_data='get_report'), 
-     InlineKeyboardButton(text='Тест', callback_data='test')]
+     #InlineKeyboardButton(text='Тест', callback_data='test')
+    ]
 ])
 
 reports = InlineKeyboardMarkup(inline_keyboard=[
@@ -12,6 +13,21 @@ reports = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Отчет по остаткам товаров", callback_data="stock_order")],
     [InlineKeyboardButton(text="↩ Назад", callback_data="back")],
     [InlineKeyboardButton(text="❌ Закрыть", callback_data="close")]
+])
+
+def create_inline_keyboard(json_data):
+    keyboard = InlineKeyboardMarkup(row_width=2)
+
+    for item in json_data:
+        button = InlineKeyboardButton(
+            text=item['Наименование']
+        )
+        keyboard.add(button)
+
+    return keyboard
+
+stocks_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Основной склад", callback_data="get_stock")]
 ])
 
 report_keyboard = InlineKeyboardMarkup(inline_keyboard=[

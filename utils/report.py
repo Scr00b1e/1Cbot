@@ -2,6 +2,29 @@ import base64
 import requests 
 import pandas as pd
 
+def fetch_json():
+    url = "http://localhost/telegram/hs/tg/report"
+    username = "Админ"
+    password = ""
+
+    credentials = f"{username}:{password}".encode("utf-8")
+    encoded_credentials = base64.b64encode(credentials).decode("utf-8")
+
+    headers = {
+        "Authorization": f"Basic {encoded_credentials}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return f"❌ Ошибка от 1С: {response.status_code}\n\n{response.text}"
+    except Exception as e:
+        return f"🚫 Ошибка при подключении к 1С:\n{str(e)}"
+
+
 def get_report1c():
     url = "http://localhost/telegram/hs/tg/report"
     username = "Админ"
@@ -27,7 +50,7 @@ def get_report1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Орг", "БанковскийСчет", "Сумма", "СуммаВал"]
+                required_columns = ["Организация", "БанковскийСчет", "Сумма", "СуммаВал"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
@@ -75,7 +98,7 @@ def get_cash1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Орг", "Касса", "Сумма", "СуммаВал"]
+                required_columns = ["Организация", "Касса", "Сумма", "СуммаВал"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
@@ -123,7 +146,7 @@ def get_stock1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Орг", "Номенк", "Кол"]
+                required_columns = ["Организация", "Наименование"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""

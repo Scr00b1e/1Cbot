@@ -7,7 +7,7 @@ from aiogram import F, Router
 
 import app.keyboards as kb
 from app.generators import ai_generate
-from utils.report import get_report1c, get_cash1c, get_stock1c
+from utils.report import get_report1c, get_cash1c, get_stock1c, fetch_json
 
 router = Router()
 
@@ -55,7 +55,7 @@ async def supply_order(callback: CallbackQuery):
     await callback.message.delete()
 
 @router.callback_query(F.data == 'cash_order')
-async def test_order(callback: CallbackQuery):
+async def cash_order(callback: CallbackQuery):
     report_text = get_cash1c()
     await callback.message.answer(report_text, 
                                   parse_mode=ParseMode.MARKDOWN, 
@@ -64,7 +64,7 @@ async def test_order(callback: CallbackQuery):
     await callback.message.delete()
 
 @router.callback_query(F.data == 'stock_order')
-async def test_order2(callback: CallbackQuery):
+async def stock_order(callback: CallbackQuery):
     report_text = get_stock1c()
     await callback.message.answer(report_text, 
                                   parse_mode=ParseMode.MARKDOWN, 

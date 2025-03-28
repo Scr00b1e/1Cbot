@@ -10,6 +10,10 @@ async def ai_generate(text: str):
     completion = await client.chat.completions.create(
         model="deepseek/deepseek-chat",
         messages=[
+            # {
+            #     "role": "system",
+            #     "content": '',
+            # },
             {
                 "role": "user",
                 "content": text
