@@ -1,5 +1,5 @@
 import base64
-import requests
+import requests 
 import pandas as pd
 
 def get_report1c():
@@ -32,7 +32,7 @@ def get_report1c():
                     if col not in df.columns:
                         df[col] = ""
                 
-                df = df[required_columns].set_index('Орг').stack()
+                df = df[required_columns]
 
                 table = "📋 *Отчёт из 1С:*\n"
                 table += "```\n"
@@ -96,8 +96,6 @@ def get_cash1c():
 
     except Exception as e:
         return f"🚫 Ошибка при подключении к 1С:\n{str(e)}"
-    
-    import base64
 
 
 def get_stock1c():
@@ -125,7 +123,7 @@ def get_stock1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = []
+                required_columns = ["Орг", "Номенк", "Кол"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
