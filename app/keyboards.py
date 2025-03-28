@@ -15,17 +15,6 @@ reports = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="❌ Закрыть", callback_data="close")]
 ])
 
-def create_inline_keyboard(json_data):
-    keyboard = InlineKeyboardMarkup(row_width=2)
-
-    for item in json_data:
-        button = InlineKeyboardButton(
-            text=item['Наименование']
-        )
-        keyboard.add(button)
-
-    return keyboard
-
 stocks_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Основной склад", callback_data="get_stock")]
 ])
