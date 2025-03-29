@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 
 def fetch_json():
-    url = "http://localhost/telegram/hs/tg/report"
+    url = "http://localhost/telegram/hs/tg/stock"
     username = "Админ"
     password = ""
 
@@ -16,9 +16,18 @@ def fetch_json():
     }
 
     try:
-        response = requests.get(url)
+        response = requests.get(url, headers=headers)
         if response.status_code == 200:
-            return response.json()
+            try:
+                data = response.json()
+                if isinstance(data, dict):
+                    data = [data]
+                elif not isinstance(data, list):
+                    return f"⚠️ Ожидался список, но получено: `{type(data).__name__}`\n\n```{data}```"
+
+                return data
+            except Exception as e:
+                return f"❌ Ошибка при разборе JSON: {str(e)}\n\nОтвет от 1С:\n{response.text}"
         else:
             return f"❌ Ошибка от 1С: {response.status_code}\n\n{response.text}"
     except Exception as e:
@@ -146,7 +155,7 @@ def get_stock1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Организация", "Наименование"]
+                required_columns = ["Наименование"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""

@@ -1,6 +1,10 @@
 from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardMarkup, InlineKeyboardButton)
 
+from utils.report import fetch_json
+
+data = fetch_json()
+
 main = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='📊 Получить отчёт', callback_data='get_report'), 
      #InlineKeyboardButton(text='Тест', callback_data='test')
@@ -16,7 +20,9 @@ reports = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 stocks_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="Основной склад", callback_data="get_stock")]
+    [InlineKeyboardButton(text=item["Наименование"], callback_data="get_stock1")]
+    for item in data
+    if "Наименование" in item
 ])
 
 report_keyboard = InlineKeyboardMarkup(inline_keyboard=[

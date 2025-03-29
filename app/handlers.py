@@ -65,12 +65,11 @@ async def cash_order(callback: CallbackQuery):
 
 @router.callback_query(F.data == 'stock_order')
 async def stock_order(callback: CallbackQuery):
-    report_text = get_stock1c()
-    await callback.message.answer(report_text, 
-                                  parse_mode=ParseMode.MARKDOWN, 
-                                  reply_markup=kb.report_keyboard)
-    await callback.answer()
     await callback.message.delete()
+    await callback.message.answer(text="Выберите склады", 
+                                  parse_mode=ParseMode.MARKDOWN, 
+                                  reply_markup=kb.stocks_keyboard)
+    await callback.answer()
 
 #back
 @router.callback_query(F.data == 'back')
