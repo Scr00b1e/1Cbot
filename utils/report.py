@@ -33,6 +33,26 @@ def fetch_json():
     except Exception as e:
         return f"🚫 Ошибка при подключении к 1С:\n{str(e)}"
 
+def send_stock(stock_name: str):
+    stock_name = {stock_name}
+    url = "http://localhost/telegram/hs/tg/newstock"
+    username = "Админ"
+    password = ""
+
+    credentials = f"{username}:{password}".encode("utf-8")
+    encoded_credentials = base64.b64encode(credentials).decode("utf-8")
+
+    headers = {
+        "Authorization": f"Basic {encoded_credentials}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.get(
+        url,
+        headers=headers,
+        json={"Наименование": list(stock_name)}
+    )
+    return response
 
 def get_report1c():
     url = "http://localhost/telegram/hs/tg/report"
