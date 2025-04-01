@@ -91,9 +91,12 @@ async def send_stocks(callback: CallbackQuery):
     stock_name = data[index]["Наименование"]
 
     response = send_stock(stock_name)
+    report_text = get_stock1c()
 
     if response.status_code == 200:
-        await callback.message.answer(f"✅ Склад *{stock_name}* успешно отправлен в 1С!")
+        await callback.message.answer(report_text, 
+                                  parse_mode=ParseMode.MARKDOWN, 
+                                  reply_markup=kb.report_keyboard)
     else:
         await callback.message.answer(f"⚠️ Ошибка от 1С ({response.status_code}):\n{response.text}")
     

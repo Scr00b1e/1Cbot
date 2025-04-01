@@ -151,7 +151,7 @@ def get_cash1c():
 
 
 def get_stock1c():
-    url = "http://localhost/telegram/hs/tg/stock"
+    url = "http://localhost/telegram/hs/tg/newstock"
     username = "Админ"
     password = ""
 
@@ -175,7 +175,7 @@ def get_stock1c():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Наименование"]
+                required_columns = ["Организация", "Номенклатура", "Количество", "Сумма"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""
