@@ -33,7 +33,7 @@ def fetch_json():
     except Exception as e:
         return f"🚫 Ошибка при подключении к 1С:\n{str(e)}"
 
-def send_stock():
+def send_stock(stock_name):
     url = "http://localhost/telegram/hs/tg/test"
     username = "Админ"
     password = ""
@@ -46,13 +46,7 @@ def send_stock():
         "Content-Type": "application/json"
     }
 
-    response = requests.post(
-         url,
-         headers=headers,
-         json={"Наименование": "Основной склад"}
-     )
-
-    response = requests.post(url, headers=headers)
+    response = requests.post(url, headers=headers, json={"Наименование": stock_name})
     if response.status_code == 200:
         try:
             data = response.json()

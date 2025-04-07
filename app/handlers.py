@@ -72,13 +72,28 @@ async def stock_order(callback: CallbackQuery):
     await callback.answer()
 
 #send stock
-@router.callback_query(F.data == 'select')
+@router.callback_query(F.data.startswith("select_"))
 async def send_stocks(callback: CallbackQuery):
-    report_text = send_stock()
-    await callback.message.answer(report_text, 
-                                   parse_mode=ParseMode.MARKDOWN, 
-                                   reply_markup=kb.report_keyboard)
+    await callback.message.delete()
 
+    index_str = callback.data.replace("select_", "")
+
+    if not index_str.isdigit():
+        await callback.message.answer("❌ Неверный формат выбора")
+        return
+
+    index = int(index_str)
+    data = fetch_json()
+    if not isinstance(data, list) or index >= len(data):
+        await callback.message.answer("⚠️ Не удалось найти склад")
+        return
+
+    stock_name = data[index]["Наименование"]
+
+    response = send_stock(stock_name)
+    await callback.message.answer(response, 
+                                  parse_mode=ParseMode.MARKDOWN, 
+                                  reply_markup=kb.report_keyboard)
     await callback.answer()
 
 #back
