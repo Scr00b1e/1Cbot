@@ -20,8 +20,8 @@ reports = InlineKeyboardMarkup(inline_keyboard=[
 ])
 
 stocks_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text=item["Naming"], callback_data=f'select_{i}')]
-    for i, item in enumerate(data) if "Naming" in item
+    [InlineKeyboardButton(text=item["Наименование"], callback_data='select')]
+    for i, item in enumerate(data) if "Наименование" in item
 ])
 
 report_keyboard = InlineKeyboardMarkup(inline_keyboard=[

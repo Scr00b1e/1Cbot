@@ -7,7 +7,7 @@ from aiogram import F, Router
 
 import app.keyboards as kb
 from app.generators import ai_generate
-from utils.report import get_report1c, get_cash1c, get_stock1c, send_stock, fetch_json
+from utils.report import get_report1c, get_cash1c, send_stock, fetch_json
 
 router = Router()
 
@@ -72,7 +72,14 @@ async def stock_order(callback: CallbackQuery):
     await callback.answer()
 
 #send stock
+@router.callback_query(F.data == 'select')
+async def send_stocks(callback: CallbackQuery):
+    report_text = send_stock()
+    await callback.message.answer(report_text, 
+                                   parse_mode=ParseMode.MARKDOWN, 
+                                   reply_markup=kb.report_keyboard)
 
+    await callback.answer()
 
 #back
 @router.callback_query(F.data == 'back')
