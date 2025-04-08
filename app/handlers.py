@@ -7,7 +7,7 @@ from aiogram import F, Router
 
 import app.keyboards as kb
 from app.generators import ai_generate
-from utils.report import get_report1c, get_cash1c, send_stock, fetch_json
+from utils.report import get_report1c, get_cash1c, send_stock, fetch_json, add_stock
 
 router = Router()
 
@@ -20,7 +20,7 @@ async def cmd_start(message: Message):
 
 @router.message(Command('catalog'))
 async def get_catalog(message: Message):
-    await message.answer('Выберите каталог', reply_markup=kb.main)
+    await message.answer('Выберите каталог👇', reply_markup=kb.main)
 
 #chat bot
 @router.message(Command('ask'))
@@ -95,6 +95,17 @@ async def send_stocks(callback: CallbackQuery):
                                   parse_mode=ParseMode.MARKDOWN, 
                                   reply_markup=kb.report_keyboard)
     await callback.answer()
+
+#add stock
+@router.callback_query(F.data == 'add_stock')
+async def add_stocks(callback: CallbackQuery):
+    report_text = add_stock()
+
+    await callback.message.answer(report_text, 
+                                  parse_mode=ParseMode.MARKDOWN, 
+                                  reply_markup=kb.report_keyboard)
+    await callback.answer()
+    await callback.message.delete()
 
 #back
 @router.callback_query(F.data == 'back')
