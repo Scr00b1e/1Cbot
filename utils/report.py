@@ -41,7 +41,7 @@ def send_stock(stock_name):
 
             df = pd.DataFrame(data)
 
-            required_columns = ["Организация", "Номенклатура", "Количество", "Сумма"]
+            required_columns = ["Номенклатура", "Количество", "Сумма"]
             for col in required_columns:
                 if col not in df.columns:
                     df[col] = ""
@@ -136,7 +136,7 @@ def get_cash1c():
     except Exception as e:
         return f"🚫 Ошибка при подключении к 1С:\n{str(e)}"
     
-#add stock
+#ADD STOCK
 def add_stock():
     url = ADDURL
 
@@ -152,7 +152,7 @@ def add_stock():
 
                 df = pd.DataFrame(data)
 
-                required_columns = ["Контрагент", "СтруктурнаяЕдиница", "Номенклатура", "Количество", "Цена", "Сумма"]
+                required_columns = ["Номенклатура", "Количество", "Сумма"]
                 for col in required_columns:
                     if col not in df.columns:
                         df[col] = ""

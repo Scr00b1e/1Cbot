@@ -1,45 +1,46 @@
-from aiogram.filters import CommandStart, Command
+from aiogram.filters import CommandStart, Command, StateFilter
 from aiogram.types import Message, CallbackQuery
 from aiogram.enums import ParseMode
-from aiogram.fsm.state import State, StatesGroup
+from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
 from aiogram import F, Router
 
 import app.keyboards as kb
-from app.generators import ai_generate
+#from app.generators import ai_generate
 from utils.report import get_report1c, get_cash1c, send_stock, fetch_json, add_stock
 
 router = Router()
 
-class Generate(StatesGroup):
-    wait = State()
+# class Generate(StatesGroup):
+#     wait = State()
 
 @router.message(CommandStart())
-async def cmd_start(message: Message):
+async def cmd_start(message: Message, state: FSMContext):
+    await state.clear()
     await message.answer("🤖 Бот запущен и готов к работе!", reply_markup=kb.settings)
 
 @router.message(Command('catalog'))
 async def get_catalog(message: Message):
     await message.answer('Выберите каталог👇', reply_markup=kb.main)
 
-#chat bot
+#CHAT BOT
 @router.message(Command('ask'))
 async def ask_bot(message: Message):
     await message.answer('Вы можете спросить вопрос')
 
 
-@router.message(Generate.wait)
-async def generate_error(message: Message):
-    await message.answer('Подождите, пока генерируется')
+# @router.message(Generate.wait)
+# async def generate_error(message: Message):
+#     await message.answer('Подождите, пока генерируется')
 
-@router.message()
-async def generate(message: Message, state: FSMContext):
-    await state.set_state(Generate.wait)
-    response = await ai_generate(message.text)
-    await message.answer(response)
-    await state.clear()
+# @router.message()
+# async def generate(message: Message, state: FSMContext):
+#     await state.set_state(Generate.wait)
+#     response = await ai_generate(message.text)
+#     await message.answer(response)
+#     await state.clear()
 
-#reports
+#REPORTS
 @router.callback_query(F.data == 'get_report')
 async def handle_callback(callback: CallbackQuery):
     await callback.message.answer('Выберите отчеты', reply_markup=kb.reports)
@@ -71,7 +72,7 @@ async def stock_order(callback: CallbackQuery):
                                   reply_markup=kb.stocks_keyboard)
     await callback.answer()
 
-#send stock
+#SEND STOCK
 @router.callback_query(F.data.startswith("select_"))
 async def send_stocks(callback: CallbackQuery):
     await callback.message.delete()
@@ -96,7 +97,7 @@ async def send_stocks(callback: CallbackQuery):
                                   reply_markup=kb.report_keyboard)
     await callback.answer()
 
-#add stock
+#ADD STOCK
 @router.callback_query(F.data == 'add_stock')
 async def add_stocks(callback: CallbackQuery):
     report_text = add_stock()
@@ -107,12 +108,26 @@ async def add_stocks(callback: CallbackQuery):
     await callback.answer()
     await callback.message.delete()
 
-#back
+#CANCEL
+@router.message(StateFilter(None), Command(commands=['cancel']))
+@router.message(default_state, F.text.lower() == 'cancel')
+async def cmd_cancel_no_state(message: Message, state: FSMContext):
+    await state.set_data({})
+    await message.answer(
+        text='Undo canceling'
+    )
+async def cmd_cancel(message: Message, state: FSMContext):
+    await state.clear()
+    await message.answer(
+        text='Canceling undone'
+    )
+
+#BACK
 @router.callback_query(F.data == 'back')
 async def handle_close(callback: CallbackQuery):
     await callback.message.answer("Выберите каталог",reply_markup=kb.main)
 
-#close
+#CLOSE
 @router.callback_query(F.data == 'close')
 async def handle_close(callback: CallbackQuery):
     await callback.message.delete()
