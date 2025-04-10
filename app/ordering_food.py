@@ -21,7 +21,9 @@ async def cmd_food(message: Message, state: FSMContext):
 
 @router.message(OrderFood.choosing_food_name, F.text.in_(available_food_names))
 async def food_chosen(message: Message, state: FSMContext):
+    #store data
     await state.update_data(chosen_food=message.text.lower())
+    #
     await message.answer(
         text="Thanks. Now, please choose the size:"
     )
@@ -36,7 +38,9 @@ async def food_chosen_incorrectly(message: Message):
 
 @router.message(OrderFood.choosing_food_size, F.text.in_(available_food_sizes))
 async def food_size_chosen(message: Message, state: FSMContext):
+    #get data
     user_data = await state.get_data()
+    #
     await message.answer(
         text=f"You chose size {message.text.lower()} of the food {user_data['chosen_food']}"
     )

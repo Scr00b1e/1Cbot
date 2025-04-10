@@ -6,14 +6,11 @@ from aiogram.fsm.context import FSMContext
 from aiogram import F, Router
 
 import app.keyboards as kb
-#from app.generators import ai_generate
 from utils.report import get_report1c, get_cash1c, send_stock, fetch_json, add_stock
 
 router = Router()
 
-# class Generate(StatesGroup):
-#     wait = State()
-
+#MAIN COMMANDS
 @router.message(CommandStart())
 async def cmd_start(message: Message, state: FSMContext):
     await state.clear()
@@ -22,23 +19,6 @@ async def cmd_start(message: Message, state: FSMContext):
 @router.message(Command('catalog'))
 async def get_catalog(message: Message):
     await message.answer('Выберите каталог👇', reply_markup=kb.main)
-
-#CHAT BOT
-@router.message(Command('ask'))
-async def ask_bot(message: Message):
-    await message.answer('Вы можете спросить вопрос')
-
-
-# @router.message(Generate.wait)
-# async def generate_error(message: Message):
-#     await message.answer('Подождите, пока генерируется')
-
-# @router.message()
-# async def generate(message: Message, state: FSMContext):
-#     await state.set_state(Generate.wait)
-#     response = await ai_generate(message.text)
-#     await message.answer(response)
-#     await state.clear()
 
 #REPORTS
 @router.callback_query(F.data == 'get_report')
