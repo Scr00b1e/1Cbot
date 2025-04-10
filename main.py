@@ -5,7 +5,7 @@ from aiogram.fsm.strategy import FSMStrategy
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import TGTOKEN
-from app import handlers, ordering_food #, chatbot
+from app import adding_stock, common #, chatbot
 
 bot = Bot(TGTOKEN)
 dp = Dispatcher(storage=MemoryStorage(), fsm_strategy=FSMStrategy.CHAT)
@@ -13,9 +13,9 @@ dp = Dispatcher(storage=MemoryStorage(), fsm_strategy=FSMStrategy.CHAT)
 async def main():
     await bot.delete_webhook()
 
-    dp.include_router(handlers.router)
+    dp.include_router(common.router)
     #dp.include_router(chatbot.router)
-    dp.include_router(ordering_food.router)
+    dp.include_router(adding_stock.router)
     await dp.start_polling(bot)
 
 

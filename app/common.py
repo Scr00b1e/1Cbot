@@ -1,12 +1,11 @@
-from aiogram.filters import CommandStart, Command, StateFilter
+from aiogram.filters import CommandStart, Command
 from aiogram.types import Message, CallbackQuery
 from aiogram.enums import ParseMode
-from aiogram.fsm.state import default_state
 from aiogram.fsm.context import FSMContext
 from aiogram import F, Router
 
 import app.keyboards as kb
-from utils.report import get_report1c, get_cash1c, send_stock, fetch_json, add_stock
+from utils.report import get_report1c, get_cash1c, send_stock, fetch_json
 
 router = Router()
 
@@ -76,31 +75,6 @@ async def send_stocks(callback: CallbackQuery):
                                   parse_mode=ParseMode.MARKDOWN, 
                                   reply_markup=kb.report_keyboard)
     await callback.answer()
-
-#ADD STOCK
-@router.callback_query(F.data == 'add_stock')
-async def add_stocks(callback: CallbackQuery):
-    report_text = add_stock()
-
-    await callback.message.answer(report_text, 
-                                  parse_mode=ParseMode.MARKDOWN, 
-                                  reply_markup=kb.report_keyboard)
-    await callback.answer()
-    await callback.message.delete()
-
-#CANCEL
-@router.message(StateFilter(None), Command(commands=['cancel']))
-@router.message(default_state, F.text.lower() == 'cancel')
-async def cmd_cancel_no_state(message: Message, state: FSMContext):
-    await state.set_data({})
-    await message.answer(
-        text='Undo canceling'
-    )
-async def cmd_cancel(message: Message, state: FSMContext):
-    await state.clear()
-    await message.answer(
-        text='Canceling undone'
-    )
 
 #BACK
 @router.callback_query(F.data == 'back')
