@@ -140,10 +140,34 @@ def get_cash1c():
 def add_stock(user_data):
     url = ADDURL
 
+    payload = {"Наименование": user_data['chosen_stock'],
+         "Количество": user_data['chosen_amount'],
+         "Цена": user_data['chosen_price']}
+
     try:
-        response = requests.post(url, headers=headers, json=user_data)
+        response = requests.post(url, headers=headers, json=payload)
         if response.status_code == 200:
-            return
+            data = response.json()
+            if isinstance(data, dict):
+                data = [data]
+            elif not isinstance(data, list):
+                return f"⚠️ Ожидался список, но получено: `{type(data).__name__}`\n\n```{data}```"
+
+            df = pd.DataFrame(data)
+
+            required_columns = ["Наименование", "Количество", "Цена"]
+            for col in required_columns:
+                if col not in df.columns:
+                    df[col] = ""
+                
+            df = df[required_columns]
+
+            table = "📋 *Отчёт из 1С:*\n"
+            table += "```\n"
+            table += df.to_string(index=False)
+            table += "\n```"
+
+            return table
         else:
             return f"❌ Ошибка от 1С: {response.status_code}\n\n{response.text}"
 

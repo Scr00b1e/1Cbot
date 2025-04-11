@@ -1,10 +1,12 @@
 from aiogram import Router, F
 from aiogram.filters import StateFilter, Command
 from aiogram.fsm.context import FSMContext
+from aiogram.enums import ParseMode
 from aiogram.fsm.state import StatesGroup, State, default_state
 from aiogram.types import Message, CallbackQuery
 
 from utils.report import add_stock
+import app.keyboards as kb
 
 router = Router()
 
@@ -53,11 +55,12 @@ async def price_chosen(message: Message, state: FSMContext):
     try:
         await state.update_data(chosen_price=int(message.text.lower()))
         user_data = await state.get_data()
-        add_stock(user_data)
+        respond_text = add_stock(user_data)
         await message.answer(
-        text=f'Создана номенклатура с наименованием {user_data['chosen_stock']}\n'
-        f'Количество {user_data['chosen_amount']}, за цену {user_data['chosen_price']}\n\n'
-        f'Вы можете увидеть изменения в отчетах /catalog'
+        # text=f'Создана номенклатура с наименованием - {user_data['chosen_stock']}\n'
+        # f'Количество - {user_data['chosen_amount']}, за цену - {user_data['chosen_price']}\n\n'
+        # f'Вы можете увидеть изменения в отчетах /catalog'
+        text=respond_text, parse_mode=ParseMode.MARKDOWN, reply_markup=kb.report_keyboard
         )
     except ValueError:
         await message.answer(
@@ -68,7 +71,7 @@ async def price_chosen(message: Message, state: FSMContext):
     await state.clear()
 
 #CANCEL
-@router.message(StateFilter(None), Command(commands=['cancel']))
+@router.message(StateFilter(None), Command('cancel'))
 @router.message(default_state, F.text.lower() == 'cancel')
 async def cmd_cancel_no_state(message: Message, state: FSMContext):
     await state.set_data({})
@@ -76,7 +79,7 @@ async def cmd_cancel_no_state(message: Message, state: FSMContext):
         text='Нечего отменять'
     )
 
-@router.message(Command(commands=['cancel']))
+@router.message(Command('cancel'))
 @router.message(F.text.lower() == 'cancel')
 async def cmd_cancel(message: Message, state: FSMContext):
     await state.clear()
