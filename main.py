@@ -5,7 +5,7 @@ from aiogram.fsm.strategy import FSMStrategy
 from aiogram.fsm.storage.memory import MemoryStorage
 
 from config import TGTOKEN
-from app import adding_stock, common #, chatbot
+from app import adding_stock, common, handling_img #, chatbot
 
 bot = Bot(TGTOKEN)
 dp = Dispatcher(storage=MemoryStorage(), fsm_strategy=FSMStrategy.CHAT)
@@ -16,6 +16,7 @@ async def main():
     dp.include_router(common.router)
     #dp.include_router(chatbot.router)
     dp.include_router(adding_stock.router)
+    dp.include_router(handling_img.router)
     await dp.start_polling(bot)
 
 

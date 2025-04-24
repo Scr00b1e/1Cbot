@@ -8,7 +8,8 @@ data = fetch_json()
 main = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text='📊 Получить отчёт', callback_data='get_report'), 
      InlineKeyboardButton(text='➕ Создать номенклатуру', callback_data='add_stock')
-    ]
+    ],
+    [InlineKeyboardButton(text='🏞 Создать номенклатуру (Картинка)', callback_data='get_image')]
 ])
 
 reports = InlineKeyboardMarkup(inline_keyboard=[
@@ -30,6 +31,5 @@ report_keyboard = InlineKeyboardMarkup(inline_keyboard=[
     ])
 
 settings = ReplyKeyboardMarkup(keyboard=[
-    [KeyboardButton(text='/catalog'), 
-     KeyboardButton(text='/ask')]
+    [KeyboardButton(text='/catalog')]
 ])
