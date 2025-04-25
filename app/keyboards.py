@@ -37,3 +37,8 @@ undo_keyboard = InlineKeyboardMarkup(inline_keyboard=[
 settings = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text='/catalog')]
 ])
+
+options_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="👍 Да", callback_data="yes")],
+        [InlineKeyboardButton(text="👎 Нет", callback_data="get_image")]
+    ])

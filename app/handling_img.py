@@ -11,6 +11,7 @@ router = Router()
 
 class ImgHandle(StatesGroup):
     image = State()
+    result = State()
 
 #get_image
 def getImage(user_data):
@@ -18,21 +19,34 @@ def getImage(user_data):
         img = Image.open(user_data['chosen_image'])
         result = pytesseract.image_to_string(img, lang='rus+eng')
 
+        print(result)
         return result
+
     except Exception as e:
+        print(f"Chosen image type: {type(user_data['chosen_image'])}")
         return f"❌ Ошибка {str(e)}"
 
 @router.callback_query(F.data == 'get_image')
 async def get_image(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
     await callback.message.answer(text='Отправьте картинку', reply_markup=kb.report_keyboard)
     await state.set_state(ImgHandle.image)
 
-@router.message(ImgHandle.image, F.photo)
+@router.message(ImgHandle.image, F.document)
 async def handle_image(message: Message, state: FSMContext):
-    await state.update_data(chosen_image=message.photo)
-    user_data = await state.get_data()
-    respond_text = getImage(user_data)
-    await message.answer(respond_text)
+    await state.update_data(chosen_image=message.document)
+    #user_data = await state.get_data()
+    #respond_text = getImage(user_data)
+    #await message.answer(respond_text)
+    await message.answer(text='Do you like the result? \n\n'
+    'If you don\'t then you can send it again', reply_markup=kb.options_keyboard)
+    await state.set_state(ImgHandle.result)
+
+#image liked
+@router.callback_query(F.data == 'yes')
+async def handle_accept(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(chosen_result=callback.message.text.lower())
+    await callback.message.answer(text='Aight brow then we bounce', reply_markup=kb.report_keyboard)
     await state.clear()
 
 #reject text
