@@ -41,13 +41,12 @@ async def amount_chosen(message: Message, state: FSMContext):
     try:
         await state.update_data(chosen_amount=int(message.text.lower()))
         await message.answer(text="Отлично, теперь напишите цену (цифру): ")
+        await state.set_state(AddStock.stock_price)
     except ValueError:
         await message.answer(
         text='Я не принимаю такое количество номенклатуры.\n\n'
-        'Начинайте все сначала'
+        'Напишите корректную цифру'
         )
-        
-    await state.set_state(AddStock.stock_price)
     
 
 @router.message(AddStock.stock_price, F.text)
@@ -62,13 +61,13 @@ async def price_chosen(message: Message, state: FSMContext):
         # f'Вы можете увидеть изменения в отчетах /catalog'
         text=respond_text, parse_mode=ParseMode.MARKDOWN, reply_markup=kb.report_keyboard
         )
+        await state.clear()
     except ValueError:
         await message.answer(
         text='Я не принимаю такую цену номенклатуры.\n\n'
-        'Начинайте все сначала'
+        'Напишите корректную цифру'
         )
 
-    await state.clear()
 
 #CANCEL
 @router.message(StateFilter(None), Command('cancel'))
