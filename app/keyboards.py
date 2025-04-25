@@ -30,6 +30,10 @@ report_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="❌ Закрыть", callback_data="close")]
     ])
 
+undo_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="❌ Отмена", callback_data="undo")]
+    ])
+
 settings = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text='/catalog')]
 ])

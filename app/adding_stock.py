@@ -18,7 +18,7 @@ class AddStock(StatesGroup):
 @router.callback_query(F.data == 'add_stock')
 async def cmd_stock(callback: CallbackQuery, state: FSMContext):
     await callback.message.answer(
-        text="Наименование номенклатуры:")
+        text="Наименование номенклатуры:", reply_markup=kb.undo_keyboard)
     await state.set_state(AddStock.stock_name)
 
 @router.message(AddStock.stock_name, F.text)
@@ -26,7 +26,7 @@ async def stock_chosen(message: Message, state: FSMContext):
     await state.update_data(chosen_stock=message.text.lower())
     await message.answer(
         text="Хорошо, теперь количество номенклатуры (цифру):"
-    )
+    , reply_markup=kb.undo_keyboard)
     await state.set_state(AddStock.stock_amount)
 
 # @router.message(StateFilter('Incorrect'))
@@ -46,7 +46,7 @@ async def amount_chosen(message: Message, state: FSMContext):
         await message.answer(
         text='Я не принимаю такое количество номенклатуры.\n\n'
         'Напишите корректную цифру'
-        )
+        , reply_markup=kb.undo_keyboard)
     
 
 @router.message(AddStock.stock_price, F.text)
@@ -66,7 +66,7 @@ async def price_chosen(message: Message, state: FSMContext):
         await message.answer(
         text='Я не принимаю такую цену номенклатуры.\n\n'
         'Напишите корректную цифру'
-        )
+        , reply_markup=kb.undo_keyboard)
 
 
 #CANCEL

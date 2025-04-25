@@ -13,8 +13,14 @@ class ImgHandle(StatesGroup):
     image = State()
 
 #get_image
-img = Image.open('test.png')
-result = pytesseract.image_to_string(img, lang='rus+eng')
+def getImage(user_data):
+    try:
+        img = Image.open(user_data['chosen_image'])
+        result = pytesseract.image_to_string(img, lang='rus+eng')
+
+        return result
+    except Exception as e:
+        return f"❌ Ошибка {str(e)}"
 
 @router.callback_query(F.data == 'get_image')
 async def get_image(callback: CallbackQuery, state: FSMContext):
@@ -23,12 +29,17 @@ async def get_image(callback: CallbackQuery, state: FSMContext):
 
 @router.message(ImgHandle.image, F.photo)
 async def handle_image(message: Message, state: FSMContext):
-    try:
-        await state.update_data(chosen_image=message.photo)
-        await message.answer(text='Картинка обрабатывается')
-        await state.clear()
-    except ValueError:
-        await message.answer(text='Я принимаю только картинку')
+    await state.update_data(chosen_image=message.photo)
+    user_data = await state.get_data()
+    respond_text = getImage(user_data)
+    await message.answer(respond_text)
+    await state.clear()
+
+#reject text
+@router.message(ImgHandle.image, F.text)
+async def handle_image(message: Message, state: FSMContext):
+    await message.answer(text='Я принимаю только картинку', reply_markup=kb.undo_keyboard)
+    await state.set_state(ImgHandle.image)
 
 #CANCEL
 @router.message(StateFilter(None), Command('cancel'))

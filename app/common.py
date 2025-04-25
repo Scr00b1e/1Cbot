@@ -82,6 +82,12 @@ async def handle_close(callback: CallbackQuery):
     await callback.message.answer("Выберите каталог",reply_markup=kb.main)
 
 #CLOSE
+@router.callback_query(F.data == 'undo')
+async def handle_close(callback: CallbackQuery, state: FSMContext):
+    await callback.message.answer("Выберите каталог",reply_markup=kb.main)
+    await state.clear()
+
+#CLOSE
 @router.callback_query(F.data == 'close')
 async def handle_close(callback: CallbackQuery):
     await callback.message.delete()
