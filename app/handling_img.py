@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery, Message
 import os
+import tempfile
 from PIL import Image
 
 from config import TGTOKEN
@@ -28,18 +29,19 @@ async def handle_image(message: Message, state: FSMContext):
     file = await bot.get_file(file_id)
     downloaded_file = await bot.download_file(file.file_path)
 
-    src = 'F:/Python/1cint/images/'
-    file_path = os.path.join(src, f'{file_id}.png')
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.png') as tmp_file:
+        tmp_file.write(downloaded_file.getvalue())
+        tmp_file_path = tmp_file.name
 
-    with open(file_path, 'wb') as new_file:
+    with open(tmp_file_path, 'wb') as new_file:
         new_file.write(downloaded_file.getvalue())
 
     try: 
-        img = Image.open(file_path)
+        img = Image.open(tmp_file_path)
         resulted = pytesseract.image_to_string(img, lang='rus')
     finally:
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if os.path.exists(tmp_file_path):
+            os.remove(tmp_file_path)
 
     await state.update_data(chosen_image=resulted)
     user_data = await state.get_data()
