@@ -42,3 +42,7 @@ options_keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="👍 Да", callback_data="yes")],
         [InlineKeyboardButton(text="👎 Нет", callback_data="get_image")]
     ])
+
+proceed_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="➡ Продолжить", callback_data="proceed")],
+    ])
